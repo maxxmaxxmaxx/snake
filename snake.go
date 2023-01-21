@@ -67,7 +67,7 @@ var frame int
 func (g *Game) Update() (err error) {
 	g.Input.Update()
 	frame++
-	if frame%30 == 0 {
+	if frame%30 == 0 { // if you want to change how fast the snake moves this line will be important
 
 		for i := 0; i < BOARDHEIGHT; i++ {
 			for j := 0; j < BOARDWIDTH; j++ {
