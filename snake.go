@@ -24,6 +24,7 @@ type Board struct {
 	SnakeLength    int
 	SnakeDirection int
 	SnakePlace     [2]int
+	SpeedIncrease  int
 }
 
 type Game struct {
@@ -37,6 +38,7 @@ func NewBoard() *Board {
 	b.SnakePlace = [2]int{5, 5}
 	b.SnakeLength = 3
 	b.SnakeDirection = 1
+	b.SpeedIncrease = 30
 	return &b
 }
 
@@ -52,6 +54,9 @@ func (g *Game) MoveFruit() {
 
 func (g *Game) AteFruit() {
 	g.Board.SnakeLength++
+	if g.Board.SpeedIncrease >= 10 {
+		g.Board.SpeedIncrease -= 5
+	}
 	for i := 0; i < BOARDHEIGHT; i++ {
 		for j := 0; j < BOARDWIDTH; j++ {
 			if g.Board.Grid[i][j] > 0 {
@@ -67,7 +72,7 @@ var frame int
 func (g *Game) Update() (err error) {
 	g.Input.Update()
 	frame++
-	if frame%30 == 0 { // if you want to change how fast the snake moves this line will be important
+	if frame%g.Board.SpeedIncrease == 0 {
 
 		for i := 0; i < BOARDHEIGHT; i++ {
 			for j := 0; j < BOARDWIDTH; j++ {
