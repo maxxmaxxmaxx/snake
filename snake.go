@@ -10,6 +10,7 @@ import (
 	"math/rand"
 	"snake/input"
 	"sync"
+	"time"
 )
 
 const (
@@ -34,7 +35,8 @@ type Game struct {
 
 func NewBoard() *Board {
 	var b Board
-	b.Fruit = [2]int{2, 2}
+	rand.Seed(time.Now().UnixNano())
+	b.Fruit = [2]int{rand.Intn(BOARDWIDTH), rand.Intn(BOARDHEIGHT)}
 	b.SnakePlace = [2]int{5, 5}
 	b.SnakeLength = 3
 	b.SnakeDirection = 1
@@ -144,11 +146,13 @@ func (g *Game) Draw(screen *ebiten.Image) {
 
 	for i := 0; i < BOARDHEIGHT; i++ {
 		for j := 0; j < BOARDWIDTH; j++ {
-			if g.Board.Grid[i][j] > 0 {
-				colStart := j * TILESIZE
-				rowStart := i * TILESIZE
-				objectCanvas := screen.SubImage(image.Rect(colStart, rowStart, colStart+TILESIZE, rowStart+TILESIZE))
-				objectCanvas.(*ebiten.Image).Fill(color.White)
+			colStart := j * TILESIZE
+			rowStart := i * TILESIZE
+			objectCanvas := screen.SubImage(image.Rect(colStart, rowStart, colStart+TILESIZE, rowStart+TILESIZE))
+			if g.Board.Grid[i][j] > 0 { //if snake is present on the coordinate
+				objectCanvas.(*ebiten.Image).Fill(color.White) //color that coordinate white
+			} else if !(g.Board.Fruit[0] == i && g.Board.Fruit[1] == j) { // if there is not a fruit on the coordinate
+				objectCanvas.(*ebiten.Image).Fill(colornames.Darkblue) //color it dark blue
 			}
 		}
 	}
